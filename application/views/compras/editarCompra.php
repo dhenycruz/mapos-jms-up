@@ -79,7 +79,7 @@
                                             <button class="button btn btn-primary" id="btnContinuar">
                                                 <span class="button__icon"><i class="bx bx-sync"></i></span><span class="button__text2">Atualizar</span>
                                             </button>
-                                            <a href="<?php echo base_url() ?>index.php/compras/visualizar/<?php echo $result->idVendas; ?>" class="button btn btn-primary">
+                                            <a href="<?php echo base_url() ?>index.php/compras/visualizar/<?php echo $result->idCompras; ?>" class="button btn btn-primary">
                                                 <span class="button__icon"><i class="bx bx-show"></i></span><span class="button__text2">Visualizar</span></a>
                                             <a href="<?php echo base_url() ?>index.php/compras" class="button btn btn-warning">
                                                 <span class="button__icon"><i class="bx bx-undo"></i></span> <span class="button__text2">Voltar</span></a>
