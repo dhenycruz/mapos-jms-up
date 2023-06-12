@@ -78,27 +78,14 @@ class Relatorios_model extends CI_Model
         if ($tipo != null) {
             $whereData .= "AND fornecedor = " . $this->db->escape($tipo);
         }
-        $query = "SELECT idClientes, nomeCliente, sexo, pessoa_fisica,
-        documento, telefone, celular, contato, email, fornecedor,
-        dataCadastro, rua, numero, complemento, bairro, cidade, estado,
-        cep FROM clientes WHERE dataCadastro $whereData ORDER BY nomeCliente";
+        $query = "SELECT * FROM clientes WHERE dataCadastro $whereData ORDER BY nomeCliente";
 
         return $this->db->query($query, [$dataInicial, $dataFinal])->result();
     }
 
     public function clientesRapid($array = false)
     {
-        $this->db->select('idClientes, nomeCliente, sexo, pessoa_fisica,
-        documento, telefone, celular, contato, email, fornecedor,
-        dataCadastro, rua, numero, complemento, bairro, cidade, estado,
-        cep');
-
         $this->db->order_by('nomeCliente', 'asc');
-
-        $this->db->select('idClientes, nomeCliente, sexo, pessoa_fisica,
-        documento, telefone, celular, contato, email, fornecedor,
-        dataCadastro, rua, numero, complemento, bairro, cidade, estado,
-        cep');
 
         $result = $this->db->get('clientes');
         if ($array) {
@@ -413,6 +400,55 @@ class Relatorios_model extends CI_Model
         return $result->result();
     }
 
+    public function comprasRapid($array = false)
+    {
+        $this->db->select('compras.*,clientes.nomeCliente, usuarios.nome');
+        $this->db->from('compras');
+        $this->db->join('clientes', 'clientes.idClientes = compras.clientes_id');
+        $this->db->join('usuarios', 'usuarios.idUsuarios = compras.usuarios_id');
+        $this->db->order_by('compras.idCompras', 'ASC');
+
+        $result = $this->db->get();
+        if ($array) {
+            return $result->result_array();
+        }
+
+        return $result->result();
+    }
+
+    public function comprasCustom($dataInicial = null, $dataFinal = null, $cliente = null, $responsavel = null, $array = false)
+    {
+        $whereData = "";
+        $whereCliente = "";
+        $whereResponsavel = "";
+        $whereStatus = "";
+        if ($dataInicial != null) {
+            $whereData .= "AND dataCompra >= ". $this->db->escape($dataInicial);
+        }
+        if ($dataFinal != null) {
+            $whereData = "AND dataCompra <= " . $this->db->escape($dataFinal);
+        }
+        if ($cliente != null) {
+            $whereCliente = "AND clientes_id = " . $this->db->escape($cliente);
+        }
+        if ($responsavel != null) {
+            $whereResponsavel = "AND usuarios_id = " . $this->db->escape($responsavel);
+        }
+
+        $query = "SELECT compras.*,clientes.nomeCliente, usuarios.nome FROM compras
+        LEFT JOIN clientes ON compras.clientes_id = clientes.idClientes
+        LEFT JOIN usuarios ON compras.usuarios_id = usuarios.idUsuarios
+        WHERE idCompras != 0 $whereData $whereCliente $whereResponsavel
+        ORDER BY compras.idCompras";
+
+        $result = $this->db->query($query);
+        if ($array) {
+            return $result->result_array();
+        }
+
+        return $result->result();
+    }
+
     public function receitasBrutasRapid()
     {
         $emitente = $this->db->query("SELECT * FROM emitente LIMIT 1")->row_array();
@@ -424,8 +460,8 @@ class Relatorios_model extends CI_Model
             SELECT
                 SUM(valor) total,
                 SUM(case when descricao NOT LIKE '%Fatura de OS%' AND descricao NOT LIKE '%Fatura de Venda%' then valor else 0 end) as totalOutros,
-                SUM(case when descricao LIKE '%Fatura de OS%' then valor - desconto else 0 end) as totalServicos,
-                SUM(case when descricao LIKE '%Fatura de Venda%' then valor - desconto else 0 end) as totalVendas
+                SUM(case when descricao LIKE '%Fatura de OS%' then valor else 0 end) as totalServicos,
+                SUM(case when descricao LIKE '%Fatura de Venda%' then valor else 0 end) as totalVendas
             FROM lancamentos
                 WHERE baixado = 1
                 AND tipo = 'receita'

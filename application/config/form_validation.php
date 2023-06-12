@@ -373,6 +373,28 @@ $config = [
             'rules' => 'trim|required',
         ]
     ],
+    'compras' => [
+        [
+            'field' => 'dataCompra',
+            'label' => 'Data da Compra',
+            'rules' => 'required|trim',
+        ],
+        [
+            'field' => 'observacoes',
+            'label' => 'Observacoes',
+            'rules' => 'trim',
+        ],
+        [
+            'field' => 'clientes_id',
+            'label' => 'clientes',
+            'rules' => 'trim|required',
+        ],
+        [
+            'field' => 'usuarios_id',
+            'label' => 'usuarios_id',
+            'rules' => 'trim|required',
+        ]
+    ],
     'anotacoes_os' => [
         [
             'field' => 'anotacao',

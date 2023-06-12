@@ -245,6 +245,50 @@
                         <div class="accordion-group widget-box">
                             <div class="accordion-heading">
                                 <div class="widget-title">
+                                    <a data-parent="#collapse-group" href="#collapseGThreeComp" data-toggle="collapse">
+                                      <span><i class='bx bx-cart-alt icon-cli'></i></span>
+                                      <h5 style="padding-left: 28px">Compras</h5>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="collapse accordion-body" id="collapseGThreeComp">
+                                <div class="widget-content">
+                                    <table class="table table-bordered">
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input name="vCompra" class="marcar" type="checkbox" checked="checked" value="1" />
+                                                    <span class="lbl"> Visualizar Compra</span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <input name="aCompra" class="marcar" type="checkbox" value="1" />
+                                                    <span class="lbl"> Adicionar Compra</span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <input name="eCompra" class="marcar" type="checkbox" value="1" />
+                                                    <span class="lbl"> Editar Compra</span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <input name="dCompra" class="marcar" type="checkbox" value="1" />
+                                                    <span class="lbl"> Excluir Compra</span>
+                                                </label>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-group widget-box">
+                            <div class="accordion-heading">
+                                <div class="widget-title">
                                     <a data-parent="#collapse-group" href="#collapseGThree333" data-toggle="collapse">
                                       <span><i class='bx bx-credit-card-front icon-cli'></i></span>
                                       <h5 style="padding-left: 28px">Cobranças</h5>
@@ -488,6 +532,12 @@
                                                 <label>
                                                     <input name="rVenda" class="marcar" type="checkbox" value="1" />
                                                     <span class="lbl"> Relatório Venda</span>
+                                                </label>
+                                            </td>
+                                            <td>
+                                                <label>
+                                                    <input name="rCompra" class="marcar" type="checkbox" value="1" />
+                                                    <span class="lbl"> Relatório Compra</span>
                                                 </label>
                                             </td>
                                             <td>

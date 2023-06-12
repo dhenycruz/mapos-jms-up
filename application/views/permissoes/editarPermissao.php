@@ -444,6 +444,69 @@
                 <div class="accordion-group widget-box">
                     <div class="accordion-heading">
                         <div class="widget-title">
+                            <a data-parent="#collapse-group" href="#collapseGCompras" data-toggle="collapse">
+                                <span><i class='bx bx-cart-alt icon-cli' ></i></span>
+                                <h5 style="padding-left: 28px">Compras</h5>
+                                <span><i class='bx bx-chevron-right icon-clic'></i></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="collapse accordion-body" id="collapseGCompras">
+                        <div class="widget-content">
+                        <table class="table table-bordered">
+                            <tr>
+                                <td colspan="4"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>
+                                            <input <?php if (isset($permissoes['vCompra'])) {
+                                                if ($permissoes['vCompra'] == '1') {
+                                                    echo 'checked';
+                                                }
+                                            }?> name="vCompra" class="marcar" type="checkbox" value="1" />
+                                            <span class="lbl"> Visualizar Compra</span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input <?php if (isset($permissoes['aCompra'])) {
+                                                if ($permissoes['aCompra'] == '1') {
+                                                    echo 'checked';
+                                                }
+                                            }?> name="aCompra" class="marcar" type="checkbox" value="1" />
+                                            <span class="lbl"> Adicionar Compra</span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input <?php if (isset($permissoes['eCompra'])) {
+                                                if ($permissoes['eCompra'] == '1') {
+                                                    echo 'checked';
+                                                }
+                                            }?> name="eCompra" class="marcar" type="checkbox" value="1" />
+                                            <span class="lbl"> Editar Compra</span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input <?php if (isset($permissoes['dCompra'])) {
+                                                if ($permissoes['dCompra'] == '1') {
+                                                    echo 'checked';
+                                                }
+                                            }?> name="dCompra" class="marcar" type="checkbox" value="1" />
+                                            <span class="lbl"> Excluir Compra</span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-group widget-box">
+                    <div class="accordion-heading">
+                        <div class="widget-title">
                             <a data-parent="#collapse-group" href="#collapseGSix" data-toggle="collapse">
                                 <span><i class='bx bx-credit-card-front icon-cli' ></i></span>
                                 <h5 style="padding-left: 28px">Cobranças</h5>
@@ -760,6 +823,16 @@
                                                 }
                                             }?> name="rVenda" class="marcar" type="checkbox" value="1" />
                                             <span class="lbl"> Relatório Venda</span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <label>
+                                            <input <?php if (isset($permissoes['rCompra'])) {
+                                                if ($permissoes['rCompra'] == '1') {
+                                                    echo 'checked';
+                                                }
+                                            }?> name="rCompra" class="marcar" type="checkbox" value="1" />
+                                            <span class="lbl"> Relatório Compra</span>
                                         </label>
                                     </td>
                                     <td>

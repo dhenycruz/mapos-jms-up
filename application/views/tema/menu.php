@@ -84,6 +84,17 @@
                     </li>
                 <?php } ?>
 
+                <?php if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vCompra')) { ?>
+                    <li class="<?php if (isset($menuCompras)) {
+                        echo 'active';
+                    }; ?>">
+                        <a class="tip-bottom" title="" href="<?= site_url('compras') ?>"><i class='bx bx bx-shopping-bag icons iconX'></i></span>
+                            <span class="title">Compras</span>
+                            <span class="title-tooltip">Compras</span>
+                        </a>
+                    </li>
+                <?php } ?>
+
                 <?php if ($this->permission->checkPermission($this->session->userdata('permissao'), 'vOs')) { ?>
                     <li class="<?php if (isset($menuOs)) {
                         echo 'active';
