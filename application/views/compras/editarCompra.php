@@ -490,12 +490,12 @@
             }
         });
         $("#produto").autocomplete({
-            source: "<?php echo base_url(); ?>index.php/os/autoCompleteProdutoSaida",
+            source: "<?php echo base_url(); ?>index.php/compras/autoCompleteProduto",
             minLength: 2,
             select: function(event, ui) {
                 $("#idProduto").val(ui.item.id);
                 $("#estoque").val(ui.item.estoque);
-                $("#preco").val(ui.item.preco);
+                $("#preco").val(ui.item.precoCompra);
                 $("#quantidade").focus();
             }
         });

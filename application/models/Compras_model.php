@@ -118,7 +118,7 @@ class Compras_model extends CI_Model
         $query = $this->db->get('produtos');
         if ($query->num_rows() > 0) {
             foreach ($query->result_array() as $row) {
-                $row_set[] = ['label'=>$row['descricao'].' | Preço: R$ '.$row['precoVenda'].' | Estoque: '.$row['estoque'],'estoque'=>$row['estoque'],'id'=>$row['idProdutos'],'preco'=>$row['precoVenda']];
+                $row_set[] = ['label'=>$row['descricao'].' | Preço: R$ '.$row['precoCompra'].' | Estoque: '.$row['estoque'],'estoque'=>$row['estoque'],'id'=>$row['idProdutos'],'preco'=>$row['precoCompra']];
             }
             echo json_encode($row_set);
         }
