@@ -8,6 +8,10 @@ class Permissoes extends MY_Controller
      * author: Ramon Silva
      * email: silva018-mg@yahoo.com.br
      *
+     * Update
+     * author: Dheniarley Cruz
+     * message: Criando as permissões para o módulo de compras.
+     * 
      */
 
     public function __construct()
@@ -84,6 +88,11 @@ class Permissoes extends MY_Controller
                 'dVenda' => $this->input->post('dVenda'),
                 'vVenda' => $this->input->post('vVenda'),
 
+                'aCompra' => $this->input->post('aCompra'),
+                'eCompra' => $this->input->post('eCompra'),
+                'dCompra' => $this->input->post('dCompra'),
+                'vCompra' => $this->input->post('vCompra'),
+
                 'aGarantia' => $this->input->post('aGarantia'),
                 'eGarantia' => $this->input->post('eGarantia'),
                 'dGarantia' => $this->input->post('dGarantia'),
@@ -117,6 +126,7 @@ class Permissoes extends MY_Controller
                 'rServico' => $this->input->post('rServico'),
                 'rOs' => $this->input->post('rOs'),
                 'rVenda' => $this->input->post('rVenda'),
+                'rCompra' => $this->input->post('rCompra'),
                 'rFinanceiro' => $this->input->post('rFinanceiro'),
 
                 'aCobranca' => $this->input->post('aCobranca'),
@@ -184,6 +194,11 @@ class Permissoes extends MY_Controller
                 'dVenda' => $this->input->post('dVenda'),
                 'vVenda' => $this->input->post('vVenda'),
 
+                'aCompra' => $this->input->post('aCompra'),
+                'eCompra' => $this->input->post('eCompra'),
+                'dCompra' => $this->input->post('dCompra'),
+                'vCompra' => $this->input->post('vCompra'),
+
                 'aGarantia' => $this->input->post('aGarantia'),
                 'eGarantia' => $this->input->post('eGarantia'),
                 'dGarantia' => $this->input->post('dGarantia'),
@@ -217,6 +232,7 @@ class Permissoes extends MY_Controller
                 'rServico' => $this->input->post('rServico'),
                 'rOs' => $this->input->post('rOs'),
                 'rVenda' => $this->input->post('rVenda'),
+                'rCompra' => $this->input->post('rCompra'),
                 'rFinanceiro' => $this->input->post('rFinanceiro'),
 
                 'aCobranca' => $this->input->post('aCobranca'),

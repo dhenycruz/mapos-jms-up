@@ -94,33 +94,23 @@ class Relatorios extends MY_Controller
                 'Documento' => 'string',
                 'Telefone' => 'string',
                 'Celular' => 'string',
-                'Contato' => 'string',
                 'E-mail' => 'string',
-                'Fornecedor' => 'string',
                 'Data de Cadastro' => 'YYYY-MM-DD',
                 'Rua' => 'string',
                 'Número' => 'string',
-                'Complemento' => 'string',
                 'Bairro' => 'string',
                 'Cidade' => 'string',
                 'Estado' => 'string',
                 'CEP' => 'string',
+                'Contato' => 'string',
+                'Complemento' => 'string',
+                'Fornecedor' => 'string',
             ];
 
             $writer = new XLSXWriter();
 
             $writer->writeSheetHeader('Sheet1', $cabecalho);
             foreach ($clientes as $cliente) {
-                if ($cliente["fornecedor"]) {
-                    $cliente["fornecedor"] = "sim";
-                } else {
-                    $cliente["fornecedor"] = "não";
-                }
-                if ($cliente["pessoa_fisica"]) {
-                    $cliente["pessoa_fisica"] = "sim";
-                } else {
-                    $cliente["pessoa_fisica"] = "não";
-                }
                 $writer->writeSheetRow('Sheet1', $cliente);
             }
 
@@ -969,6 +959,208 @@ class Relatorios extends MY_Controller
         $this->load->helper('mpdf');
         $html = $this->load->view('relatorios/imprimir/imprimirVendas', $data, true);
         pdf_create($html, 'relatorio_vendas' . date('d/m/y'), true);
+    }
+
+    public function compras()
+    {
+        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'rCompra')) {
+            $this->session->set_flashdata('error', 'Você não tem permissão para gerar relatórios de compras.');
+            redirect(base_url());
+        }
+
+        $this->data['view'] = 'relatorios/rel_compras';
+        return $this->layout();
+    }
+
+    public function comprasRapid()
+    {
+        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'rCompra')) {
+            $this->session->set_flashdata('error', 'Você não tem permissão para gerar relatórios de compras.');
+            redirect(base_url());
+        }
+
+        $format = $this->input->get('format');
+        $isXls = $format === 'xls';
+        $compras = $this->Relatorios_model->comprasRapid($isXls);
+        $totalCompras = 0;
+        $totalDesconto = 0;
+        $totalValorDesconto = 0;
+        
+        foreach($compras as $compra) {
+            $totalCompras += $isXls
+                ? floatval($compra['valorTotal'])
+                : floatval($compra->valorTotal);
+            $totalDesconto += $isXls
+                ? floatval($compra['desconto'])
+                : floatval($compra->desconto);
+
+            $isXls
+                ?
+                $totalValorDesconto += $compra['valor_desconto'] != 0 ?
+                floatval($compra['valor_desconto']) : floatval($compra['valorTotal'])
+                :
+                $totalValorDesconto += $compra->valor_desconto != 0 ?
+                floatval($compra->valor_desconto) : floatval($compra->valorTotal);
+        }
+
+        if ($format == 'xls') {
+            $comprasFormatadas = array_map(function ($item) {
+                return [
+                    '#' => $item['idCompras'],
+                    'fornecedor/cliente' => $item['nomeCliente'],
+                    'responsavel' => $item['nome'],
+                    'data' => $item['dataCompra'],
+                    'total' => $item['valorTotal'] ?: 0,
+                    'totalDesconto' => $item['valor_desconto'] ?: 0,
+                    'desconto' => $item['desconto'] ?: 0,
+                    'tipo_desconto' => $item['tipo_desconto'] ?: '-',
+                ];
+            }, $compras);
+
+            $cabecalho = [
+                '#' => 'string',
+                'Fornecedor/Cliente' => 'string',
+                'Responsável' => 'string',
+                'Data' => 'DD-MM-YYYY',
+                'Total' => 'price',
+                'Total Com Desconto' => 'price',
+                'Desconto' => 'number',
+                'tipo Desconto' => 'string',
+            ];
+
+            $writer = new XLSXWriter();
+            $writer->writeSheetRow(null, []);
+            $writer->writeSheetHeader('Sheet1', $cabecalho);
+            foreach ($comprasFormatadas as $compra) {
+                $writer->writeSheetRow('Sheet1', $compra);
+            }
+            $writer->writeSheetRow(null, []);
+            $writer->writeSheetRow(null, []);
+            $writer->writeSheetRow(null, []);
+            $writer->writeSheetRow('Sheet1', []);
+            $writer->writeSheetRow('Sheet1', [
+                null,
+                null,
+                null,
+                null,
+                $totalCompras,
+                $totalValorDesconto,
+            ]);
+
+            $arquivo = $writer->writeToString();
+            $this->load->helper('download');
+            force_download('relatorio_compras.xlsx', $arquivo);
+
+            return;
+        }
+
+        $data['compras'] = $compras;
+        $data['total_compras'] = $totalCompras;
+        $data['total_geral_desconto'] = $totalDesconto;
+        $data['total_geral'] = $totalValorDesconto;
+        $data['emitente'] = $this->Mapos_model->getEmitente();
+        $data['title'] = 'Relatório de Compras Rápido';
+        $data['topo'] = $this->load->view('relatorios/imprimir/imprimirTopo', $data, true);
+
+        $this->load->helper('mpdf');
+        $html = $this->load->view('relatorios/imprimir/imprimirCompras', $data, true);
+        pdf_create($html, 'relatorio_compras' . date('d/m/y'), true);
+    }
+
+    public function comprasCustom()
+    {
+        if (!$this->permission->checkPermission($this->session->userdata('permissao'), 'rCompra')) {
+            $this->session->set_flashdata('error', 'Você não tem permissão para gerar relatórios de compras.');
+            redirect(base_url());
+        }
+
+        $dataInicial = $this->input->get('dataInicial');
+        $dataFinal = $this->input->get('dataFinal');
+        $cliente = $this->input->get('cliente');
+        $responsavel = $this->input->get('responsavel');
+        $format = $this->input->get('format');
+
+        $isXls = $format === 'xls';
+        $compras = $this->Relatorios_model->comprasCustom($dataInicial, $dataFinal, $cliente, $responsavel, $isXls);
+
+        $totalCompras = 0;
+        $totalDesconto = 0;
+        $totalValorDesconto = 0;
+        foreach($compras as $compra) {
+            $totalCompras += $isXls
+                ? floatval($compra['valorTotal'])
+                : floatval($compra->valorTotal);
+            $totalDesconto += $isXls
+                ? floatval($compra['desconto'])
+                : floatval($compra->desconto);
+
+            $isXls
+                ?
+                $totalValorDesconto += $compra['valor_desconto'] != 0 ?
+                floatval($compra['valor_desconto']) : floatval($compra['valorTotal'])
+                :
+                $totalValorDesconto += $compra->valor_desconto != 0 ? floatval($compra->valor_desconto) : floatval($compra->valorTotal);
+        }
+
+        if ($format == 'xls') {
+            $comprasFormatadas = array_map(function ($item) {
+                return [
+                    '#' => $item['idCompras'],
+                    'fornecedor/cliente' => $item['nameCliente'],
+                    'responsavel' => $item['nome'],
+                    'data' => $item['dataCompra'],
+                    'total' => $item['valorTotal'] ?: 0,
+                    'totalDesconto' => $item['valor_desconto'] ?: 0,
+                    'desconto' => $item['desconto'] ?: 0,
+                    'tipo_desconto' => $item['tipo_desconto'] ?: '-',
+                ];
+            }, $compras);
+
+            $cabecalho = [
+                '#' => 'string',
+                'Fornecedor/Cliente' => 'string',
+                'Responsável' => 'string',
+                'Data' => 'DD-MM-YYYY',
+                'Total' => 'price',
+                'Total com Desconto' => 'price',
+                'Desconto' => 'number',
+            ];
+
+            $writer = new XLSXWriter();
+            $writer->writeSheetHeader('Sheet1', $cabecalho);
+            foreach ($comprasFormatadas as $compra) {
+                $writer->writeSheetRow('Sheet1', $compra);
+            }
+
+            $writer->writeSheetRow(null, []);
+            $writer->writeSheetRow(null, []);
+            $writer->writeSheetRow(null, []);
+            $writer->writeSheetRow('Sheet1', []);
+            $writer->writeSheetRow('Sheet1', [
+                null,
+                null,
+                null,
+                null,
+                $totalCompras,
+                $totalValorDesconto,
+            ]);
+
+            $arquivo = $writer->writeToString();
+            $this->load->helper('download');
+            force_download('relatorio_compras_custom.xlsx', $arquivo);
+
+            return;
+        }
+
+        $data['compras'] = $compras;
+        $data['total_compras'] = $totalCompras;
+        $data['emitente'] = $this->Mapos_model->getEmitente();
+        $data['title'] = 'Relatório de Compras Customizado';
+        $data['topo'] = $this->load->view('relatorios/imprimir/imprimirTopo', $data, true);
+
+        $this->load->helper('mpdf');
+        $html = $this->load->view('relatorios/imprimir/imprimirCompras', $data, true);
+        pdf_create($html, 'relatorio_compras' . date('d/m/y'), true);
     }
 
     public function receitasBrutasMei()
