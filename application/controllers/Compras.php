@@ -79,6 +79,7 @@ class Compras extends MY_Controller
             if (is_numeric($id = $this->compras_model->add('compras', $data,  true))) {
                 $this->session->set_flashdata('success', 'Compra iniciada com sucesso, adicione os produtos.');
                 log_info('Adicionou uma compra.');
+                redirect(site_url('compras/editar/') . $id);
             } else {
                 $this->data['custom_error'] = '<div class="form_error"><p>Ocorreu um erro.</p></div>';
             }
