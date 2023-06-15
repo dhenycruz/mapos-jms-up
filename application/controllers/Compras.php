@@ -193,7 +193,7 @@ class Compras extends MY_Controller
         }
 
         if ($this->form_validation->run() == false) {
-            echo json_encode(['result' => false]);
+            echo json_encode(['result' => false, 'messages' => 'Produto não encontrado no estoque, cadastre primeiro o produto.']);
         } else {
             $compra_id = $this->input->post('compras_id');
             $preco = $this->input->post('preco');

@@ -593,6 +593,7 @@
                                 $("#produto").val('').focus();
                                 $("#resultado").val("");
                                 $("#desconto").val("");
+                                $("#idProduto").val("")
                             } else {
                                 Swal.fire({
                                     icon: 'error',
