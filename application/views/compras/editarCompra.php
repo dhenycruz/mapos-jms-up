@@ -495,7 +495,7 @@
             select: function(event, ui) {
                 $("#idProduto").val(ui.item.id);
                 $("#estoque").val(ui.item.estoque);
-                $("#preco").val(ui.item.precoCompra);
+                $("#preco").val(ui.item.preco);
                 $("#quantidade").focus();
             }
         });
